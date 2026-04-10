@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cherry Research builds accessible knowledge tools, computer-assisted research workflows, and user-controlled AI systems.">
+  <meta name="keywords" content="research, knowledge tools, artificial intelligence, applied ML, Cherry Research">
+  <meta name="author" content="Cherry Research">
+  <meta property="og:title" content="Cherry Research">
+  <meta property="og:description" content="Accessible knowledge tools, computer-assisted research, and user-controlled AI systems.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#b1163a">
+  <title>Cherry Research</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-home">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="home.html" aria-label="Cherry Research home">
+        <span class="brand-mark">
+          <img src="favicon.svg" alt="" aria-hidden="true">
+        </span>
+        <span class="brand-text">
+          <span class="brand-title">Cherry Research</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="showcase.html">Showcase</a>
+        <a href="lab-notes.html">Lab Notes</a>
+        <a href="#contact" class="nav-cta">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="about">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <h1 class="hero-title terminal-heading">CHERRY RESEARCH</h1>
+          <div class="hero-pills" aria-label="Cherry Research focus areas">
+            <a class="hero-badge hero-badge-link" href="https://github.com/CherryResearch" target="_blank" rel="noopener noreferrer">Explore GitHub</a>
+            <span class="hero-badge">User-Controlled AI</span>
+            <span class="hero-badge">Research Tools</span>
+            <span class="hero-badge">Applied ML</span>
+          </div>
+          <p class="hero-subtitle">about</p>
+          <p class="hero-lede">Cherry Research is an independent project dedicated to learning about, with, and by computers. As artificial intelligence becomes more capable, interpretation and diffusion of the technology is essential to maximizing the good that it creates in the world. We focus on building accessible knowledge tools, conducting computer-assisted research, and working to understand the broader impacts of these systems. This comes from a belief that AI should be a collaborative, trusted partner to extend our abilities, not replace them.</p>
+        </div>
+        <div class="hero-aside">
+          <a class="hero-art hero-art-link" href="showcase.html" aria-label="Prototype Lab, explore the showcase">
+            <div class="hero-orb orb-1"></div>
+            <div class="hero-orb orb-2"></div>
+            <div class="hero-orb orb-3"></div>
+            <div class="hero-orb orb-4"></div>
+            <svg class="cherry-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <radialGradient id="cherryGradient" cx="40%" cy="40%" r="60%" fx="30%" fy="30%">
+                  <stop offset="0%" style="stop-color:#f0556a; stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#b1163a; stop-opacity:1" />
+                </radialGradient>
+              </defs>
+              <g id="cherry-group">
+                <path id="leaf" d="M 100 30 Q 120 5, 140 30 T 100 30" fill="#2f6f64" transform="rotate(-15 100 30)" />
+                <path id="stems" d="M 100 30 Q 85 60 70 90 M 100 30 Q 115 65 130 95" stroke="#7e5b3f" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <g id="left-cherry">
+                  <circle cx="70" cy="110" r="35" fill="url(#cherryGradient)"/>
+                  <path d="M 60 90 Q 70 80 80 90" stroke="rgba(255, 255, 255, 0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                </g>
+                <g id="right-cherry">
+                  <circle cx="130" cy="115" r="35" fill="url(#cherryGradient)"/>
+                  <path d="M 120 95 Q 130 85 140 95" stroke="rgba(255, 255, 255, 0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                </g>
+              </g>
+            </svg>
+            <div class="hero-caption">
+              <span class="hero-caption-title">PROTOTYPES</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="showcase-preview">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title section-title-caps">SHOWCASE</h2>
+            <p class="section-subtitle">Showcase collects the projects that have enough shape to share: tools, interfaces, and experiments built in public.</p>
+          </div>
+          <a class="text-link" href="showcase.html">Browse showcase &rarr;</a>
+        </div>
+        <div class="project-grid">
+          <article class="card project-card" style="--card-accent: var(--accent-2);">
+            <a class="card-media-link" href="project.html?id=float" aria-label="Read the float showcase entry">
+              <div class="project-media project-media-contain">
+                <img src="images/float-logo.png?v=transparent" alt="float logo" loading="lazy">
+                <div class="media-fallback" aria-hidden="true">FL</div>
+              </div>
+            </a>
+            <div class="project-content">
+              <p class="card-kicker">Core project</p>
+              <h3>float</h3>
+              <p>A user-controlled workspace and knowledge agent for working with AI through durable memory, tools, and personalization.</p>
+              <div class="tag-container">
+                <span class="tag">Workspace</span>
+                <span class="tag">Memory</span>
+                <span class="tag">Tools</span>
+                <span class="tag">Local-first</span>
+              </div>
+              <div class="card-actions">
+                <a href="project.html?id=float" class="text-link">Read README &rarr;</a>
+                <a href="https://github.com/CherryResearch/float" class="text-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt reveal" id="blog">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title section-title-caps">LAB NOTES</h2>
+            <p class="section-subtitle">Lab Notes are short writeups on training, evaluation, architecture, and the slow business of figuring out what actually works.</p>
+          </div>
+          <a class="text-link" href="lab-notes.html">Read all posts &rarr;</a>
+        </div>
+        <div class="blog-preview">
+          <article class="card note-card">
+            <div class="note-card-body">
+              <p class="card-kicker">Featured note</p>
+              <h3>Introducing float</h3>
+              <div class="post-summary">
+                <p>Our first and core project is float, a user-controlled workspace and knowledge agent for working with AI using durable memory, tools, and personalization.</p>
+              </div>
+              <a href="post.html?post=introducing-float" class="text-link">Read note &rarr;</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Contact</p>
+            <h2 class="section-title">Collaborate with Cherry Research</h2>
+            <p class="section-subtitle">Questions, demos, collaborations, and thoughtful disagreements are welcome.</p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <form class="contact-form" action="mailto:cherry.Research@pm.me" method="POST" enctype="text/plain">
+            <label class="sr-only" for="name">Name</label>
+            <input id="name" name="name" type="text" placeholder="Your name" required>
+            <label class="sr-only" for="email">Email</label>
+            <input id="email" name="_replyto" type="email" placeholder="Your email" required>
+            <label class="sr-only" for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell us about your idea, research, or project." required></textarea>
+            <button type="submit" class="btn btn-primary">Send message</button>
+            <p class="form-note">Prefer direct email? <a href="mailto:cherry.Research@pm.me">cherry.Research@pm.me</a></p>
+          </form>
+          <div class="contact-aside">
+            <h3>What we love to build</h3>
+            <ul>
+              <li>Applied AI that ships into the field.</li>
+              <li>Human-centered robotics and tools.</li>
+              <li>Climate, energy, and resilience experiments.</li>
+            </ul>
+            <div class="contact-links">
+              <a href="https://www.youtube.com/@CherryResearch" target="_blank" rel="noopener noreferrer">YouTube</a>
+              <a href="https://bsky.app/profile/cherryresearch.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
+              <a href="https://github.com/CherryResearch" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <span class="brand-mark">
+          <img src="favicon.svg" alt="" aria-hidden="true">
+        </span>
+        <div>
+          <p class="footer-title">Cherry Research</p>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="showcase.html">Showcase</a>
+        <a href="lab-notes.html">Lab Notes</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer-links footer-social">
+        <a href="https://www.youtube.com/@CherryResearch" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://bsky.app/profile/cherryresearch.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
+        <a href="https://github.com/CherryResearch" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const yearEl = document.getElementById('year');
+    if (yearEl) {
+      yearEl.textContent = new Date().getFullYear();
+    }
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(section => revealObserver.observe(section));
+
+  </script>
+</body>
+</html>

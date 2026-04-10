@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cherry Research Lab Notes on training, evaluation, architecture, and figuring out what works.">
+  <meta name="keywords" content="blog, lab notes, research, updates, Cherry Research">
+  <meta name="author" content="Cherry Research">
+  <meta name="theme-color" content="#b1163a">
+  <title>Lab Notes - Cherry Research</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-lab-notes">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="home.html" aria-label="Cherry Research home">
+        <span class="brand-mark">
+          <img src="favicon.svg" alt="" aria-hidden="true">
+        </span>
+        <span class="brand-text">
+          <span class="brand-title">Cherry Research</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="home.html#about">About</a>
+        <a href="showcase.html">Showcase</a>
+        <a href="lab-notes.html" aria-current="page">Lab Notes</a>
+        <a href="home.html#contact" class="nav-cta">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-title terminal-heading">LAB NOTES</h1>
+        <p>Lab Notes are short writeups on training, evaluation, architecture, and the slow business of figuring out what actually works.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="blog-container">
+        <div id="blog-posts-container">
+          <p class="loading-message">Loading posts...</p>
+        </div>
+
+        <div class="pagination"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <span class="brand-mark">
+          <img src="favicon.svg" alt="" aria-hidden="true">
+        </span>
+        <div>
+          <p class="footer-title">Cherry Research</p>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="home.html">Home</a>
+        <a href="home.html#about">About</a>
+        <a href="showcase.html">Showcase</a>
+        <a href="home.html#contact">Contact</a>
+      </div>
+      <div class="footer-links footer-social">
+        <a href="https://www.youtube.com/@CherryResearch" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://bsky.app/profile/cherryresearch.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
+        <a href="https://github.com/CherryResearch" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const fallbackPosts = [
+      {
+        slug: 'introducing-float',
+        title: 'Introducing float',
+        date: '2026-04-17',
+        tags: ['float', 'intro', 'workspace'],
+        readTime: '3 min read',
+        summary: 'Our first and core project is float, a user-controlled workspace and knowledge agent built for durable memory, tools, and personalization.'
+      }
+    ];
+
+    const yearEl = document.getElementById('year');
+    if (yearEl) {
+      yearEl.textContent = new Date().getFullYear();
+    }
+    if (window.marked) {
+      marked.setOptions({ breaks: true, gfm: true, mangle: false, headerIds: false });
+    }
+
+    function parseFrontMatter(markdown) {
+      const cleaned = markdown.replace(/^\uFEFF/, '');
+      const fmRegex = /^---\r?\n([\s\S]+?)\r?\n---\r?\n([\s\S]*)$/;
+      const match = fmRegex.exec(cleaned);
+      if (!match) return { metadata: {}, content: markdown };
+      const yaml = match[1].trim();
+      const content = match[2];
+      const metadata = {};
+      yaml.split('\n').forEach(line => {
+        const parts = line.split(':');
+        const key = parts.shift();
+        if (!key) return;
+        let value = parts.join(':').trim();
+        if (value.startsWith('[') && value.endsWith(']')) {
+          try {
+            value = JSON.parse(value);
+          } catch (e) {
+            value = [];
+          }
+        } else {
+          value = value.replace(/^"|"$/g, '');
+        }
+        metadata[key.trim()] = value;
+      });
+      return { metadata, content };
+    }
+
+    function getDateValue(dateString) {
+      if (!dateString) return 0;
+      const parsed = Date.parse(dateString);
+      return Number.isNaN(parsed) ? 0 : parsed;
+    }
+
+    function normalizeMarkdown(input) {
+      if (!input) return '';
+      const withEmbeds = input.replace(/!\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (match, target, alt) => {
+        const cleaned = target.trim();
+        const fileName = cleaned.replace(/^\.?\/*/, '');
+        const isAbsolute = cleaned.startsWith('http://') || cleaned.startsWith('https://') || cleaned.startsWith('/') || cleaned.startsWith('./');
+        const src = isAbsolute ? cleaned : `posts/${fileName}`;
+        const altText = (alt || fileName).trim();
+        return `![${altText}](${src})`;
+      });
+      return withEmbeds.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (match, target, label) => {
+        const cleaned = target.trim().replace(/\.md$/i, '');
+        const text = (label || cleaned).trim();
+        return `[${text}](post.html?post=${encodeURIComponent(cleaned)})`;
+      });
+    }
+
+    function renderMarkdown(input) {
+      if (window.marked) {
+        return marked.parse(input);
+      }
+      const escaped = input
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      return escaped.replace(/\n/g, '<br>');
+    }
+
+    function renderPostCards(posts) {
+      const container = document.getElementById('blog-posts-container');
+      const tagsFallback = Array.isArray(posts) ? posts : [];
+      const postsHtml = tagsFallback.map(post => {
+        const tagsHtml = Array.isArray(post.tags)
+          ? post.tags.map(tag => `<span class="tag">${tag}</span>`).join('')
+          : '';
+        const summaryHtml = renderMarkdown(normalizeMarkdown(post.summary || ''));
+        const metaHtml = post.readTime
+          ? `<div class="post-meta"><span>${post.readTime}</span></div>`
+          : '';
+        return `
+          <article class="card note-card" id="${post.slug}">
+            <div class="note-card-body">
+              <p class="card-kicker">${post.date || 'Lab entry'}</p>
+              <h3>${post.title || 'Untitled Post'}</h3>
+              ${metaHtml}
+              <div class="post-summary">${summaryHtml}</div>
+              ${tagsHtml ? `<div class="tag-container">${tagsHtml}</div>` : ''}
+              <a href="post.html?post=${post.slug}" class="text-link">Continue reading &rarr;</a>
+            </div>
+          </article>
+        `;
+      });
+
+      container.innerHTML = postsHtml.join('') || '<p class="error-message">No posts found.</p>';
+
+      const paginationContainer = document.querySelector('.pagination');
+      if (paginationContainer && tagsFallback.length > 0) {
+        paginationContainer.innerHTML = '<a href="#" class="page-link active">1</a>';
+      }
+    }
+
+    async function loadBlogPosts() {
+      const container = document.getElementById('blog-posts-container');
+      container.innerHTML = '<p class="loading-message">Loading posts...</p>';
+
+      try {
+        const response = await fetch('posts/index.json');
+        if (!response.ok) {
+          throw new Error('Failed to fetch post index');
+        }
+        const slugs = await response.json();
+
+        const posts = await Promise.all(
+          slugs.map(async slug => {
+            const res = await fetch(`posts/${slug}.md`);
+            if (!res.ok) {
+              throw new Error(`Failed to fetch ${slug}`);
+            }
+            const raw = await res.text();
+            const { metadata } = parseFrontMatter(raw);
+            return { slug, ...metadata };
+          })
+        );
+
+        posts.sort((a, b) => getDateValue(b.date) - getDateValue(a.date));
+        renderPostCards(posts);
+      } catch (error) {
+        console.error('Error loading blog posts:', error);
+        renderPostCards(fallbackPosts);
+      }
+    }
+
+    loadBlogPosts();
+  </script>
+</body>
+</html>

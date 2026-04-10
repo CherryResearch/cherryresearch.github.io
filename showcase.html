@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Showcase collects the projects that have enough shape to share: tools, interfaces, and experiments built in public.">
+  <meta name="keywords" content="projects, showcase, innovation, technology, research, Cherry Research">
+  <meta name="author" content="Cherry Research">
+  <meta name="theme-color" content="#b1163a">
+  <title>Showcase - Cherry Research</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-showcase">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="home.html" aria-label="Cherry Research home">
+        <span class="brand-mark">
+          <img src="favicon.svg" alt="" aria-hidden="true">
+        </span>
+        <span class="brand-text">
+          <span class="brand-title">Cherry Research</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="home.html#about">About</a>
+        <a href="showcase.html" aria-current="page">Showcase</a>
+        <a href="lab-notes.html">Lab Notes</a>
+        <a href="home.html#contact" class="nav-cta">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <h1>Project Showcase</h1>
+        <p>Showcase collects the projects that have enough shape to share: tools, interfaces, and experiments built in public.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="project-grid" id="project-grid-container">
+          <p class="loading-message">Loading projects...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <span class="brand-mark">
+          <img src="favicon.svg" alt="" aria-hidden="true">
+        </span>
+        <div>
+          <p class="footer-title">Cherry Research</p>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="home.html">Home</a>
+        <a href="home.html#about">About</a>
+        <a href="lab-notes.html">Lab Notes</a>
+        <a href="home.html#contact">Contact</a>
+      </div>
+      <div class="footer-links footer-social">
+        <a href="https://www.youtube.com/@CherryResearch" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://bsky.app/profile/cherryresearch.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
+        <a href="https://github.com/CherryResearch" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const yearEl = document.getElementById('year');
+    if (yearEl) {
+      yearEl.textContent = new Date().getFullYear();
+    }
+
+    function getDateValue(dateString) {
+      if (!dateString) return 0;
+      const parsed = Date.parse(dateString);
+      return Number.isNaN(parsed) ? 0 : parsed;
+    }
+
+    async function loadProjects() {
+      const container = document.getElementById('project-grid-container');
+      container.innerHTML = '<p class="loading-message">Loading projects...</p>';
+
+      try {
+        const response = await fetch('showcase/index.json');
+        if (!response.ok) {
+          throw new Error(`Failed to fetch manifest: ${response.statusText}`);
+        }
+
+        const projects = await response.json();
+        const sorted = [...projects].sort((a, b) => getDateValue(b.date) - getDateValue(a.date));
+        const accents = ['var(--accent)', 'var(--accent-2)', 'var(--accent-3)'];
+
+        if (Array.isArray(sorted) && sorted.length > 0) {
+          const projectsHtml = sorted.map((projectData, index) => {
+            const accent = accents[index % accents.length];
+            const initials = (projectData.title || 'CR')
+              .split(' ')
+              .slice(0, 2)
+              .map(word => word[0])
+              .join('')
+              .toUpperCase();
+            const kicker = projectData.date || projectData.category || 'Research project';
+            return `
+              <article class="card project-card" style="--card-accent: ${accent}">
+                <a class="card-media-link" href="project.html?id=${projectData.id}" aria-label="Read the ${projectData.title || 'project'} README">
+                  <div class="project-media ${projectData.image ? '' : 'is-missing'} ${projectData.imageFit === 'contain' ? 'project-media-contain' : ''}">
+                    ${projectData.image ? `<img src="${projectData.image}" alt="${projectData.title || 'Project image'}" loading="lazy" onerror="this.closest('.project-media').classList.add('is-missing');">` : ''}
+                    <div class="media-fallback" aria-hidden="true">${initials}</div>
+                  </div>
+                </a>
+                <div class="project-content">
+                  <p class="card-kicker">${kicker}</p>
+                  <h3>${projectData.title || 'Untitled Project'}</h3>
+                  <p>${projectData.description || 'No description available.'}</p>
+                  ${projectData.tags && projectData.tags.length > 0 ?
+                    `<div class="tag-container">
+                      ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>` : ''
+                  }
+                  <div class="card-actions">
+                    <a href="project.html?id=${projectData.id}" class="text-link">Read README &rarr;</a>
+                    ${projectData.repoUrl ? `<a href="${projectData.repoUrl}" class="text-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>` : ''}
+                  </div>
+                </div>
+              </article>
+            `;
+          }).join('');
+
+          container.innerHTML = projectsHtml;
+        } else {
+          container.innerHTML = '<p class="error-message">No projects found.</p>';
+        }
+
+      } catch (error) {
+        console.error('Error loading projects:', error);
+        container.innerHTML = '<p class="error-message">Failed to load projects. Please check the console for details.</p>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProjects);
+  </script>
+</body>
+</html>

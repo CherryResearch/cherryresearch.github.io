@@ -1,0 +1,12 @@
+[
+  {
+    "id": "float",
+    "title": "float",
+    "tags": ["AI", "Agent", "Workspace", "Local-first"],
+    "description": "A user-controlled workspace and knowledge agent for working with AI through durable memory, tools, and personalization.",
+    "date": "2026-04-17",
+    "image": "images/float-logo.png?v=transparent",
+    "imageFit": "contain",
+    "repoUrl": "https://github.com/CherryResearch/float"
+  }
+]
