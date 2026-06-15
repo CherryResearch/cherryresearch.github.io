@@ -33,7 +33,7 @@ This process has to be considerate. A collaborative, open-source dataset for rea
 
 The intent is to demonstrate the process of data curation, separation, training, and evaluation. The local fine-tunes should be transparent, transferable to future models, and replicable for evaluations and forks. A useful adapter should leave behind enough metadata for someone else to understand the dataset snapshot, source and license notes, training configuration, and evaluation prompts without guessing what happened.
 
-If you are interested in contributing a dataset or evaluation set, (or if you have any other questions or comments) please email cherryresearch@pm.me first rather than sending files cold. We can consider storage solutions case by case; if there is a useful shared dataset later, something like Hugging Face may be a good home for it.
+If you are interested in contributing a dataset or evaluation set, (or if you have any other questions or comments) please email cherry.research@pm.me first rather than sending files cold. We can consider storage solutions case by case; if there is a useful shared dataset later, something like Hugging Face may be a good home for it.
 
 ## Tinker Studio
 
