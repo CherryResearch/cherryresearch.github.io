@@ -133,15 +133,35 @@
           </div>
           <a class="text-link" href="lab-notes.html">Read all posts &rarr;</a>
         </div>
-        <div class="blog-preview">
+        <div class="blog-preview" id="latest-notes-container">
           <article class="card note-card">
             <div class="note-card-body">
-              <p class="card-kicker">Featured note</p>
-              <h3>building float</h3>
+              <p class="card-kicker">Latest note</p>
+              <h3>Contributing and Fine-Tuning</h3>
+              <div class="post-summary">
+                <p>How outside contributions can help float and why data provenance matters.</p>
+              </div>
+              <a href="post.html?post=contributing-and-fine-tuning" class="text-link">Read note &rarr;</a>
+            </div>
+          </article>
+          <article class="card note-card">
+            <div class="note-card-body">
+              <p class="card-kicker">2026-05-05</p>
+              <h3>Building float</h3>
               <div class="post-summary">
                 <p>How float is being built as a testbed for agentic development, and what that changes about iteration speed and architecture work.</p>
               </div>
               <a href="post.html?post=building-float" class="text-link">Read note &rarr;</a>
+            </div>
+          </article>
+          <article class="card note-card">
+            <div class="note-card-body">
+              <p class="card-kicker">2026-04-17</p>
+              <h3>Introducing float</h3>
+              <div class="post-summary">
+                <p>Our first and core project is float, a user-controlled workspace and knowledge agent built for durable memory, tools, and personalization.</p>
+              </div>
+              <a href="post.html?post=introducing-float" class="text-link">Read note &rarr;</a>
             </div>
           </article>
         </div>
@@ -169,11 +189,16 @@
             <p class="form-note">Prefer direct email? <a href="mailto:cherry.Research@pm.me">cherry.Research@pm.me</a></p>
           </form>
           <div class="contact-aside">
-            <h3>What we love to build</h3>
+            <h3>Current projects</h3>
             <ul>
-              <li>Applied AI that ships into the field.</li>
-              <li>Human-centered robotics and tools.</li>
-              <li>Climate, energy, and resilience experiments.</li>
+              <li><a href="project.html?id=float">float</a>: a user-controlled AI workspace for memory, tools, modules, and local-first model workflows.</li>
+              <li><a href="https://github.com/CherryResearch/tinker-studio" target="_blank" rel="noopener noreferrer">Tinker Studio</a>: a training and evaluation workbench for data curation, experiments, and checkpoint workflows.</li>
+            </ul>
+            <h3>Research directions</h3>
+            <ul>
+              <li>Independent, user-controlled AGI systems.</li>
+              <li>Economic, climate, and development research.</li>
+              <li>Public AI education and policy discussion.</li>
             </ul>
             <div class="contact-links">
               <a href="https://www.youtube.com/@CherryResearch" target="_blank" rel="noopener noreferrer">YouTube</a>
@@ -211,10 +236,132 @@
   </footer>
 
   <script>
+    const fallbackLatestNotes = [
+      {
+        slug: 'contributing-and-fine-tuning',
+        title: 'Contributing and Fine-Tuning',
+        date: '2026-06-14',
+        readTime: '2 min read',
+        summary: 'How outside contributions can help float and why data provenance matters.'
+      },
+      {
+        slug: 'building-float',
+        title: 'Building float',
+        date: '2026-05-05',
+        readTime: '5 min read',
+        summary: 'How float is being built as a testbed for agentic development, and what that changes about iteration speed and architecture work.'
+      },
+      {
+        slug: 'introducing-float',
+        title: 'Introducing float',
+        date: '2026-04-17',
+        readTime: '3 min read',
+        summary: 'Our first and core project is float, a user-controlled workspace and knowledge agent built for durable memory, tools, and personalization.'
+      }
+    ];
+
     const yearEl = document.getElementById('year');
     if (yearEl) {
       yearEl.textContent = new Date().getFullYear();
     }
+
+    function parseFrontMatter(markdown) {
+      const cleaned = markdown.replace(/^\uFEFF/, '');
+      const fmRegex = /^---\r?\n([\s\S]+?)\r?\n---\r?\n([\s\S]*)$/;
+      const match = fmRegex.exec(cleaned);
+      if (!match) return { metadata: {}, content: markdown };
+      const yaml = match[1].trim();
+      const metadata = {};
+      yaml.split('\n').forEach(line => {
+        const parts = line.split(':');
+        const key = parts.shift();
+        if (!key) return;
+        let value = parts.join(':').trim();
+        if (value.startsWith('[') && value.endsWith(']')) {
+          try {
+            value = JSON.parse(value);
+          } catch (e) {
+            value = [];
+          }
+        } else {
+          value = value.replace(/^"|"$/g, '');
+        }
+        metadata[key.trim()] = value;
+      });
+      return { metadata, content: match[2] };
+    }
+
+    function getDateValue(dateString) {
+      if (!dateString) return 0;
+      const parsed = Date.parse(dateString);
+      return Number.isNaN(parsed) ? 0 : parsed;
+    }
+
+    function escapeHtml(input) {
+      return String(input || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderLatestNotes(posts) {
+      const container = document.getElementById('latest-notes-container');
+      if (!container) return;
+
+      const datedPosts = posts
+        .filter(post => getDateValue(post.date) > 0)
+        .sort((a, b) => getDateValue(b.date) - getDateValue(a.date));
+      const latestPosts = (datedPosts.length > 0 ? datedPosts : posts).slice(0, 3);
+
+      container.innerHTML = latestPosts.map((post, index) => {
+        const kicker = index === 0
+          ? `Latest note &middot; ${escapeHtml(post.date || 'Lab entry')}`
+          : escapeHtml(post.date || 'Lab entry');
+        const readTime = post.readTime
+          ? `<div class="post-meta"><span>${escapeHtml(post.readTime)}</span></div>`
+          : '';
+        return `
+          <article class="card note-card">
+            <div class="note-card-body">
+              <p class="card-kicker">${kicker}</p>
+              <h3>${escapeHtml(post.title || 'Untitled Post')}</h3>
+              ${readTime}
+              <div class="post-summary"><p>${escapeHtml(post.summary || '')}</p></div>
+              <a href="post.html?post=${encodeURIComponent(post.slug)}" class="text-link">Read note &rarr;</a>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    async function loadLatestNotes() {
+      try {
+        const response = await fetch('posts/index.json');
+        if (!response.ok) {
+          throw new Error('Failed to fetch post index');
+        }
+        const slugs = await response.json();
+        const posts = await Promise.all(
+          slugs.map(async slug => {
+            const res = await fetch(`posts/${slug}.md`);
+            if (!res.ok) {
+              throw new Error(`Failed to fetch ${slug}`);
+            }
+            const raw = await res.text();
+            const { metadata } = parseFrontMatter(raw);
+            return { slug, ...metadata };
+          })
+        );
+        renderLatestNotes(posts);
+      } catch (error) {
+        console.error('Error loading latest notes:', error);
+        renderLatestNotes(fallbackLatestNotes);
+      }
+    }
+
+    loadLatestNotes();
 
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
